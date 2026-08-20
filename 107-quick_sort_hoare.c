@@ -1,7 +1,7 @@
 #include "sort.h"
 
 /**
- * swap_values - Swaps two integers
+ * swap_values - Swaps two values in an array
  * @array: Array being sorted
  * @a: First index
  * @b: Second index
@@ -10,9 +10,6 @@
 static void swap_values(int *array, size_t a, size_t b, size_t size)
 {
 	int temp;
-
-	if (a == b)
-		return;
 
 	temp = array[a];
 	array[a] = array[b];
@@ -32,12 +29,11 @@ static void swap_values(int *array, size_t a, size_t b, size_t size)
 static size_t hoare_partition(int *array, size_t low, size_t high, size_t size)
 {
 	int pivot;
-	long i;
-	size_t j;
+	long i, j;
 
 	pivot = array[high];
 	i = (long)low - 1;
-	j = high + 1;
+	j = (long)high + 1;
 
 	while (1)
 	{
@@ -49,15 +45,15 @@ static size_t hoare_partition(int *array, size_t low, size_t high, size_t size)
 			j--;
 		} while (array[j] > pivot);
 
-		if ((size_t)i >= j)
-			return (j);
+		if (i >= j)
+			return ((size_t)i);
 
-		swap_values(array, (size_t)i, j, size);
+		swap_values(array, (size_t)i, (size_t)j, size);
 	}
 }
 
 /**
- * quick_hoare - Recursively sorts an array using Hoare partition
+ * quick_hoare - Recursively sorts using Hoare partition
  * @array: Array to sort
  * @low: Starting index
  * @high: Ending index
@@ -65,17 +61,16 @@ static size_t hoare_partition(int *array, size_t low, size_t high, size_t size)
  */
 static void quick_hoare(int *array, size_t low, size_t high, size_t size)
 {
-	size_t partition;
+	size_t p;
 
 	if (low >= high)
 		return;
 
-	partition = hoare_partition(array, low, high, size);
+	p = hoare_partition(array, low, high, size);
 
-	if (partition > low)
-		quick_hoare(array, low, partition, size);
-
-	quick_hoare(array, partition + 1, high, size);
+	if (p > 0)
+		quick_hoare(array, low, p - 1, size);
+	quick_hoare(array, p, high, size);
 }
 
 /**
